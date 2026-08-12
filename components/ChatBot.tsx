@@ -65,16 +65,15 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="flex flex-col h-full min-h-[50vh]">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto win-scroll -mx-1 px-1 mb-3 flex flex-col gap-2.5">
+    <div className="flex flex-col h-full min-h-0">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto win-scroll -mx-1 px-1 mb-3 flex flex-col gap-2.5 min-h-0">
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-[13.5px] leading-relaxed whitespace-pre-wrap ${
-              m.role === "user"
-                ? "self-end bg-ios-blue text-white rounded-br-md"
-                : "self-start bg-black/[0.05] dark:bg-white/10 text-ios-text dark:text-white rounded-bl-md"
-            }`}
+            className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-[13.5px] leading-relaxed whitespace-pre-wrap ${m.role === "user"
+              ? "self-end bg-ios-blue text-white rounded-br-md"
+              : "self-start bg-black/[0.05] dark:bg-white/10 text-ios-text dark:text-white rounded-bl-md"
+              }`}
           >
             {m.text}
           </div>
