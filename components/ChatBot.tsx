@@ -6,6 +6,27 @@ import { fetchGithubRepos, GithubRepo } from "@/lib/github";
 import { askGemini, ChatMessage } from "@/lib/gemini";
 import { githubConfig } from "@/lib/data";
 
+const URL_REGEX = /(https?:\/\/[^\s)]+)/g;
+
+function renderWithLinks(text: string) {
+  const parts = text.split(URL_REGEX);
+  return parts.map((part, i) =>
+    part.startsWith("http://") || part.startsWith("https://") ? (
+      <a
+        key={i}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-2 font-medium break-all"
+      >
+        {part}
+      </a>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
+
 const SALUDO: ChatMessage = {
   role: "model",
   text: "¡Miau! Soy Miu 🐱. Puedo responder preguntas sobre los proyectos de GitHub de Carlos: qué hacen, con qué tecnología están hechos, etc. ¿Qué quieres saber?",
@@ -43,7 +64,7 @@ export default function ChatBot() {
           `- ${r.name}${r.language ? ` (${r.language})` : ""}: ${r.description ?? "sin descripción"} — ${r.stargazers_count}⭐ — ${r.html_url}`
       )
       .join("\n");
-    return `Eres Miu, un gato asistente simpático y breve del portafolio de ${githubConfig.username}. Responde en español, con un tono cálido y profesional, SOLO sobre estos repositorios públicos de GitHub (no inventes proyectos que no estén en la lista). Si preguntan algo fuera de este tema, redirige amablemente hacia los proyectos o el contacto. Repositorios:\n${lista}`;
+    return `Eres Miu, un gato asistente simpático del portafolio de ${githubConfig.username}. Responde en español, con un tono cálido y profesional, SOLO sobre estos repositorios públicos de GitHub (no inventes proyectos que no estén en la lista). Cuando menciones un proyecto específico, incluye siempre su link (la URL completa de html_url) al final de esa mención. Da respuestas completas y directas, sin cortarlas a la mitad; si listas varios proyectos usa viñetas con "- ". Si preguntan algo fuera de este tema, redirige amablemente hacia los proyectos o el contacto. Repositorios:\n${lista}`;
   };
 
   const send = async () => {
@@ -66,16 +87,17 @@ export default function ChatBot() {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto win-scroll -mx-1 px-1 mb-3 flex flex-col gap-2.5 min-h-0">
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto win-scroll -mx-1 px-1 mb-3 flex flex-col gap-2.5">
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-[13.5px] leading-relaxed whitespace-pre-wrap ${m.role === "user"
-              ? "self-end bg-ios-blue text-white rounded-br-md"
-              : "self-start bg-black/[0.05] dark:bg-white/10 text-ios-text dark:text-white rounded-bl-md"
-              }`}
+            className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-[13.5px] leading-relaxed whitespace-pre-wrap ${
+              m.role === "user"
+                ? "self-end bg-ios-blue text-white rounded-br-md"
+                : "self-start bg-black/[0.05] dark:bg-white/10 text-ios-text dark:text-white rounded-bl-md"
+            }`}
           >
-            {m.text}
+            {renderWithLinks(m.text)}
           </div>
         ))}
         {sending && (
