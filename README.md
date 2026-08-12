@@ -142,3 +142,5 @@ Como la restricción por referrer de Google a veces bloquea `localhost`, durante
 - `next` 14.2.35 · `react` 18 · `tailwindcss` 3 · `lucide-react` (íconos)
 
 
+
+
