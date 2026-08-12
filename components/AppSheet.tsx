@@ -43,7 +43,7 @@ export default function AppSheet({ title, icon, gradient, onClose, children }: A
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto win-scroll p-5">{children}</div>
+        <div className="flex-1 overflow-y-auto win-scroll p-5 min-h-0">{children}</div>
       </div>
     </div>
   );
