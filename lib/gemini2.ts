@@ -29,15 +29,7 @@ export async function askGemini(systemInstruction: string, history: ChatMessage[
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: systemInstruction }] },
       contents: history.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
-      generationConfig: {
-        maxOutputTokens: 1024,
-        temperature: 0.6,
-        // gemini-3.x "piensa" antes de responder y ese pensamiento gasta
-        // tokens del mismo presupuesto que la respuesta final. "low" lo
-        // deja al mínimo para que no se coma el límite (no se puede
-        // desactivar del todo en los modelos Flash de la serie 3).
-        thinkingConfig: { thinkingLevel: "low" },
-      },
+      generationConfig: { maxOutputTokens: 400, temperature: 0.6 },
     }),
   });
 
